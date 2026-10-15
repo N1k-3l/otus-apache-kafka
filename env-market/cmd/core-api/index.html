@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment-Market</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --panel-2: #273449;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-2: #0ea5e9;
+            --danger: #ef4444;
+            --ok: #22c55e;
+            --warn: #f59e0b;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1e293b 0, var(--bg) 45%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 40px 24px 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: -0.03em;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.88);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            margin: 0 0 18px;
+            font-size: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 14px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            margin-top: 7px;
+            padding: 11px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text);
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #08111f;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            opacity: 0.94;
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #f87171, var(--danger));
+            color: white;
+            padding: 7px 10px;
+            font-size: 13px;
+        }
+
+        #message {
+            min-height: 22px;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        #message.ok {
+            color: var(--ok);
+        }
+
+        #message.err {
+            color: var(--danger);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        th {
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            color: var(--muted);
+            font-size: 12px;
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .badge, .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .badge.k8s {
+            background: rgba(56, 189, 248, 0.16);
+            color: #7dd3fc;
+        }
+
+        .badge.vm {
+            background: rgba(168, 85, 247, 0.16);
+            color: #c084fc;
+        }
+
+        .badge.bm {
+            background: rgba(245, 158, 11, 0.16);
+            color: #fbbf24;
+        }
+
+        .status.CREATING {
+            background: rgba(245, 158, 11, 0.16);
+            color: #fbbf24;
+        }
+
+        .status.ACTIVE {
+            background: rgba(34, 197, 94, 0.16);
+            color: #4ade80;
+        }
+
+        .status.DELETING {
+            background: rgba(239, 68, 68, 0.16);
+            color: #f87171;
+        }
+
+        .status.DELETED {
+            background: rgba(148, 163, 184, 0.16);
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Environment-Market</h1>
+    <p>Микросервисная оркестрация сред: Kubernetes, VM, Bare Metal</p>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Заказать окружение</h2>
+        <form id="orderForm">
+            <label>
+                Название
+                <input id="name" required placeholder="my-app-dev" autocomplete="off">
+            </label>
+            <label>
+                Тип инфраструктуры
+                <select id="type">
+                    <option value="k8s">Kubernetes</option>
+                    <option value="vm">VM</option>
+                    <option value="bm">Bare Metal</option>
+                </select>
+            </label>
+            <button type="submit">Создать окружение</button>
+        </form>
+        <div id="message"></div>
+    </section>
+
+    <section class="card">
+        <h2>Окружения</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Тип</th>
+                    <th>Статус</th>
+                    <th>Создано</th>
+                    <th>Действие</th>
+                </tr>
+                </thead>
+                <tbody id="envTable"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script>
+    const api = '/api/environments';
+
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char];
+        });
+    }
+
+    async function loadEnvironments() {
+        const response = await fetch(api);
+        if (!response.ok) {
+            return;
+        }
+
+        const environments = await response.json();
+        const tbody = document.getElementById('envTable');
+        tbody.innerHTML = '';
+
+        for (const env of environments) {
+            const tr = document.createElement('tr');
+            const canDelete = env.status !== 'DELETED' && env.status !== 'DELETING';
+
+            tr.innerHTML = `
+                <td class="mono" title="${escapeHtml(env.id)}">${escapeHtml(env.id)}</td>
+                <td>${escapeHtml(env.name)}</td>
+                <td><span class="badge ${escapeHtml(env.type)}">${escapeHtml(env.type)}</span></td>
+                <td><span class="status ${escapeHtml(env.status)}">${escapeHtml(env.status)}</span></td>
+                <td>${new Date(env.created_at).toLocaleString()}</td>
+                <td>${canDelete ? `<button class="danger" onclick="removeEnvironment('${escapeHtml(env.id)}')">Удалить</button>` : '—'}</td>
+            `;
+
+            tbody.appendChild(tr);
+        }
+    }
+
+    async function removeEnvironment(id) {
+        if (!confirm('Удалить окружение ' + id + '?')) {
+            return;
+        }
+
+        await fetch(api + '/' + id, { method: 'DELETE' });
+        await loadEnvironments();
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const type = document.getElementById('type').value;
+        const message = document.getElementById('message');
+
+        if (!name) {
+            return;
+        }
+
+        const response = await fetch(api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, type: type })
+        });
+
+        if (response.ok) {
+            message.textContent = 'Заказ принят. Окружение создаётся.';
+            message.className = 'ok';
+            document.getElementById('name').value = '';
+            await loadEnvironments();
+        } else {
+            const errorText = await response.text();
+            message.textContent = 'Ошибка: ' + errorText;
+            message.className = 'err';
+        }
+    });
+
+    setInterval(loadEnvironments, 3000);
+    loadEnvironments();
+</script>
+</body>
+</html>
